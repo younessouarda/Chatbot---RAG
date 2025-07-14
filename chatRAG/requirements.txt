@@ -1,0 +1,42 @@
+# Flask and extensions
+flask==2.3.3
+flask-cors==4.0.0
+flask-bcrypt==1.0.1
+flask-jwt-extended==4.6.0
+werkzeug==2.3.7
+
+# PostgreSQL
+psycopg2-binary==2.9.9
+
+# Environment variables
+python-dotenv==1.0.1
+
+# MinIO
+minio==7.2.4
+
+# NLP / Embeddings
+transformers==4.41.2
+sentence-transformers==2.6.1
+torch            
+accelerate==0.30.1
+huggingface-hub==0.23.2
+llama-cpp-python==0.2.72  # Pour Llama local
+
+
+# FAISS & similarity
+faiss-cpu==1.7.4
+scikit-learn
+numpy==1.26.4
+
+# Document parsing
+PyPDF2==3.0.1
+python-docx==1.1.0
+openpyxl==3.1.2
+
+# LangChain (pour le splitting)
+langchain==0.2.3
+
+# Utils
+requests==2.31.0
+tqdm==4.66.4
+pickle-mixin==1.0.2

@@ -1,0 +1,137 @@
+.auth-page {
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #f0f2f5;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; 
+  width: 100vw;
+  background: #f0f2f5;
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 30px 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #ddd;
+  text-align: center;
+}
+
+.auth-container h2 {
+  margin-bottom: 20px;
+  font-weight: 700;
+  color: #007bff;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+
+
+.auth-form input {
+  background-color: white;  /* Fond blanc */
+  color: black;             /* Texte noir */
+  padding: 12px 15px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline-color: #007bff;
+  transition: border-color 0.3s;
+}
+
+
+.auth-form input:focus {
+  border-color: #007bff;
+}
+
+.auth-form button {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  font-weight: 600;
+  padding: 12px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.auth-form button:hover {
+  background-color: #0056b3;
+}
+
+.auth-links {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-size: 0.9em;
+}
+
+.link-btn {
+  background: none;
+  border: none;
+  color: #007bff;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+}
+
+
+
+
+.brand-name {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+
+
+
+.brand-name-top {
+  display: block;
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-decoration: none;
+  margin-bottom: 2rem; /* espace sous le logo */
+}
+
+.chat-white {
+  color: white;
+}
+
+.rag-blue {
+  color: #007bff;
+}
+
+.auth-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 3rem; /* espace au-dessus du logo */
+  min-height: 100vh;
+  background-color: #f0f2f5;
+}
+
+

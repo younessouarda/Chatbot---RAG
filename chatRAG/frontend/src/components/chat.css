@@ -1,0 +1,617 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #f8f8f8;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #333;
+}
+
+.chat-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  max-width: 100%;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  color: #333;
+}
+
+/* Colonne gauche : liste des conversations */
+.conversations-list {
+  width: 280px;
+  min-width: 200px;
+  border-right: 1px solid #e0e0e0;
+  background-color: #f7f7f7;
+  padding: 15px 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.conversations-list h3 {
+  padding: 0 15px 15px;
+  margin-top: 0;
+  border-bottom: 1px solid #e0e0e0;
+  color: #555;
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.new-conversation-btn {
+  width: calc(100% - 30px);
+  margin: 15px auto 20px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: 1px solid #007bff;
+  border-radius: 25px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  display: block;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.new-conversation-btn:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+}
+
+/* Conteneur pour la liste scrollable des conversations */
+.conversations-list-scrollable {
+  flex-grow: 1;
+  overflow-y: auto;
+  /* Ajoutez les styles de la barre de défilement ici */
+  scrollbar-width: thin; /* Pour Firefox */
+  scrollbar-color: #ccc transparent; /* Pour Firefox (couleur de la barre de défilement et du fond) */
+  -webkit-overflow-scrolling: touch; /* Pour un défilement fluide sur iOS */
+}
+
+/* Styles pour WebKit (Chrome, Safari) */
+.conversations-list-scrollable::-webkit-scrollbar {
+  width: 8px; /* Largeur de la barre de défilement verticale */
+}
+
+.conversations-list-scrollable::-webkit-scrollbar-track {
+  background: transparent; /* Fond de la piste de défilement */
+}
+
+.conversations-list-scrollable::-webkit-scrollbar-thumb {
+  background-color: #ccc; /* Couleur du "pouce" de la barre de défilement */
+  border-radius: 4px; /* Coins arrondis pour le pouce */
+  border: 2px solid transparent; /* Pour créer un peu de padding visuel */
+  background-clip: padding-box; /* S'assure que le border n'interfère pas avec la couleur de fond */
+}
+
+.conversations-list-scrollable::-webkit-scrollbar-thumb:hover {
+  background-color: #a0a0a0; /* Couleur au survol */
+}
+
+
+.conversation-item {
+  cursor: pointer;
+  padding: 12px 15px;
+  background-color: transparent;
+  font-weight: 500;
+  border-bottom: 1px solid #f0f0f0;
+  color: #555;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  /* overflow: hidden; */
+  text-overflow: ellipsis;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  padding-right: 5px;
+  z-index: 1;
+}
+
+.conversation-item.dropdown-active {
+  z-index: 1015;
+  background-color: #e5e5e5;
+}
+
+.conversation-item:hover {
+  background-color: #e5e5e5;
+  color: #333;
+}
+
+.conversation-item.selected {
+  background-color: #e0e0e0;
+  font-weight: 600;
+  color: #111;
+  border-left: 3px solid #007bff;
+  padding-left: 12px;
+}
+
+.conversation-item .conversation-title {
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 5px;
+}
+
+.conversation-options-container {
+  position: relative;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease, background-color 0.2s ease;
+  height: 24px;
+  width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: transparent;
+  flex-shrink: 0;
+}
+
+.conversation-item:hover .conversation-options-container {
+  opacity: 1;
+  visibility: visible;
+  background-color: #e0e0e0;
+}
+
+.conversation-options-container.active-dropdown {
+  opacity: 1;
+  visibility: visible;
+  background-color: #d0d0d0;
+}
+
+.conversation-options-button {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  color: #666;
+  transition: color 0.2s ease, background-color 0.2s ease;
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none;
+}
+
+.conversation-options-button:hover {
+  color: #333;
+  background-color: #d0d0d0;
+}
+
+.conversation-options-dropdown {
+  position: absolute;
+  bottom: calc(100% + 5px);
+  right: 0;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  z-index: 1020;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 140px;
+  padding: 5px 0;
+}
+
+.conversation-options-dropdown button {
+  padding: 10px 15px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  color: #333;
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease;
+  width: 100%;
+  outline: none;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.conversation-options-dropdown button:hover {
+  background-color: #f0f0f0;
+}
+
+.conversation-options-dropdown button + button {
+  border-top: 1px solid #f5f5f5;
+}
+
+/* Partie chat */
+.chat-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.chat-header {
+  padding: 12px 20px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background: #fafafa;
+  flex-shrink: 0;
+  user-select: none;
+  color: #333;
+}
+
+.chat-header h2 {
+  color: black;
+  margin: 0;
+}
+
+.model-options {
+  display: flex;
+  gap: 10px;
+  margin-right: auto;
+}
+
+.model-options select {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #f0f0f0;
+  color: #333;
+  font-size: 0.9rem;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2C197.989L146.205%2C57.195L5.41%2C197.989L0%2C192.579l146.205%2C-146.205L292.41%2C192.579L287%2C197.989z%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: right 8px top 50%;
+  background-size: 10px auto;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.model-options select:hover {
+  border-color: #a0a0a0;
+  background-color: #e5e5e5;
+}
+
+.model-options select:focus {
+  border-color: #888;
+}
+
+.user-menu-container {
+  position: relative;
+  margin-left: 20px;
+}
+
+.user-icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.user-icon-button:hover {
+  background-color: #e0e0e0;
+}
+
+.user-icon-button img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+
+.user-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px);
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 160px;
+}
+
+.user-dropdown button {
+  padding: 10px 15px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  color: #333;
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease;
+  width: 100%;
+  outline: none;
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.user-dropdown button:hover {
+  background-color: #f0f0f0;
+}
+
+.user-dropdown button + button {
+  border-top: 1px solid #f5f5f5;
+}
+
+.messages {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 20px;
+  background-color: #fcfcfc;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+  color: #333;
+}
+
+.message-user {
+  align-self: flex-end;
+  background-color: #007bff;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 20px 20px 0 20px;
+  max-width: 70%;
+  word-break: break-word;
+  font-size: 1rem;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+}
+
+.message-bot {
+  align-self: flex-start;
+  background-color: #ffffff;
+  color: #222;
+  padding: 12px 18px;
+  border-radius: 20px 20px 20px 0;
+  max-width: 70%;
+  word-break: break-word;
+  font-size: 1rem;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+  border: 1px solid #f0f0f0;
+}
+
+.input-area {
+  border-top: 1px solid #e0e0e0;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #f7f7f7;
+  flex-shrink: 0;
+  color: #333;
+}
+
+.input-area button {
+  font-size: 22px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: #007bff;
+  transition: color 0.2s ease;
+  opacity: 1;
+}
+
+.input-area button:disabled {
+  color: #bbbbbb;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.input-area button:hover:not(:disabled) {
+  color: #fff;
+}
+
+.upload-btn {
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  height: auto;
+}
+
+.input-area input[type="text"] {
+  flex-grow: 1;
+  padding: 10px 15px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  color: #555;
+  background-color: white;
+}
+
+.input-area input[type="text"]::placeholder {
+  color: #999;
+}
+
+.send-btn {
+  background-color: #007bff;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 25px;
+  font-weight: 600;
+  cursor: default;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, cursor 0.2s ease;
+}
+
+.send-btn:disabled {
+  background-color: #007bff;
+  color: #ffffff;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.send-btn:not(:disabled) {
+  cursor: pointer;
+  background-color: #007bff;
+  color: #ffffff;
+  opacity: 1;
+}
+
+.send-btn:hover {
+  background-color: #006cdf;
+  color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0,123,255,0.2);
+}
+
+/* Animation pour les points de "typing" */
+@keyframes dot-animation {
+  0%, 20% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.typing-animation span {
+  animation: dot-animation 1.5s infinite;
+  opacity: 0;
+}
+
+.typing-animation span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-animation span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .chat-container {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .conversations-list {
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 10px 0;
+  }
+
+  .conversations-list h3 {
+    display: none;
+  }
+
+  .new-conversation-btn {
+    width: calc(100% - 20px);
+    margin: 10px auto;
+  }
+
+  .conversation-item {
+    padding: 10px 10px;
+    font-size: 0.9rem;
+  }
+
+  .chat-main {
+    height: auto;
+  }
+
+  /* Ajustements spécifiques pour l'alignement responsive */
+  .chat-main .messages {
+    flex-grow: 1;
+  }
+
+  .chat-header {
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .model-options {
+    margin-right: 0;
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .model-options select {
+    flex: 1;
+    margin: 0 5px;
+  }
+
+  .user-menu-container {
+    margin-left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .user-dropdown {
+    top: auto;
+    bottom: calc(100% + 10px);
+    left: 0;
+    right: auto;
+    width: 100%;
+  }
+
+  .conversation-item .conversation-title {
+    max-width: calc(100% - 40px);
+  }
+  .conversation-options-container {
+    opacity: 1;
+    visibility: visible;
+    background-color: transparent;
+  }
+  .conversation-options-dropdown {
+    min-width: 120px;
+    font-size: 0.9rem;
+    top: auto;
+    bottom: calc(100% + 5px);
+    left: auto;
+    right: 0;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+.download-info {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.download-info span {
+  font-weight: bold;
+}
+.download-info button {
+  padding: 4px 8px;
+  cursor: pointer;
+}
+

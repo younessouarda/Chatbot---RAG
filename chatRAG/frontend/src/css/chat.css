@@ -1,0 +1,572 @@
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: #f8f8f8; /* Fond légèrement plus clair */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #333; /* Texte général gris foncé pour une meilleure lisibilité */
+}
+
+.chat-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  max-width: 100%;
+  background: white;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* Ombre plus douce */
+  color: #333;
+}
+
+/* Colonne gauche : liste des conversations */
+.conversations-list {
+  width: 280px; /* Légèrement plus large pour les titres */
+  min-width: 200px; /* Assure une largeur minimale */
+  border-right: 1px solid #e0e0e0; /* Bordure grise subtile */
+  overflow-y: auto;
+  height: 100vh;
+  background-color: #f7f7f7; /* Fond gris très clair */
+  padding: 15px 0; /* Plus d'espace vertical */
+}
+
+.conversations-list h3 {
+  padding: 0 15px 15px; /* Espacement ajusté */
+  margin-top: 0;
+  border-bottom: 1px solid #e0e0e0; /* Bordure sous le titre */
+  color: #555; /* Titre gris plus doux */
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.new-conversation-btn {
+  width: calc(100% - 30px); /* Prend toute la largeur moins le padding */
+  margin: 15px auto 20px; /* Centré et espacé */
+  padding: 10px 15px;
+  background-color: #e8e8e8; /* Fond gris clair */
+  color: #333; /* Texte gris foncé */
+  border: 1px solid #d0d0d0; /* Bordure légèrement plus foncée */
+  border-radius: 25px; /* Bouton arrondi */
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  display: block; /* Pour centrer le margin auto */
+  text-align: center;
+}
+
+.new-conversation-btn:hover {
+  background-color: #dcdcdc; /* Gris plus foncé au survol */
+  border-color: #c0c0c0;
+}
+
+.conversation-item {
+  cursor: pointer;
+  padding: 12px 15px; /* Plus de padding */
+  background-color: transparent;
+  font-weight: 500; /* Moins gras par défaut */
+  border-bottom: 1px solid #f0f0f0; /* Bordure très fine */
+  color: #555; /* Texte gris moyen */
+  font-size: 0.95rem;
+  white-space: nowrap; /* Empêche le texte de se casser sur plusieurs lignes */
+  overflow: hidden; /* Cache le débordement */
+  text-overflow: ellipsis; /* Ajoute des points de suspension */
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.conversation-item:hover {
+  background-color: #e5e5e5; /* Gris clair au survol */
+  color: #333; /* Texte plus foncé au survol */
+}
+
+.conversation-item.selected {
+  background-color: #e0e0e0; /* Gris moyen pour la sélection */
+  font-weight: 600; /* Plus gras si sélectionné */
+  color: #111; /* Texte plus foncé pour la sélection */
+  border-left: 3px solid #888; /* Barre latérale distinctive */
+  padding-left: 12px; /* Ajuste le padding pour la barre */
+}
+
+/* Partie chat */
+.chat-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.chat-header {
+  padding: 12px 20px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: flex-end; /* Alignement à droite pour les options */
+  align-items: center;
+  background: #fafafa;
+  flex-shrink: 0;
+  user-select: none;
+  color: #333;
+}
+
+.chat-header h2 { /* This rule is now effectively unused if the h2 is removed from chat.jsx */
+  color: black;
+  margin: 0;
+}
+
+.model-options {
+  display: flex;
+  gap: 10px;
+  margin-right: auto; /* Pousse les options vers la gauche, alignant l'icône utilisateur à droite */
+}
+
+.model-options select {
+  padding: 8px 12px;
+  border: 1px solid #ccc; /* Bordure grise */
+  border-radius: 6px; /* Coins arrondis */
+  background-color: #f0f0f0; /* Fond gris très clair */
+  color: #333; /* Texte gris foncé */
+  font-size: 0.9rem;
+  cursor: pointer;
+  outline: none; /* Supprime l'outline bleu au focus */
+  appearance: none; /* Supprime le style par défaut du navigateur */
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2C197.989L146.205%2C57.195L5.41%2C197.989L0%2C192.579l146.205%2C-146.205L292.41%2C192.579L287%2C197.989z%22%2F%3E%3C%2Fsvg%3E'); /* Flèche personnalisée */
+  background-repeat: no-repeat;
+  background-position: right 8px top 50%;
+  background-size: 10px auto;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.model-options select:hover {
+  border-color: #a0a0a0;
+  background-color: #e5e5e5;
+}
+
+.model-options select:focus {
+  border-color: #888;
+}
+
+.user-menu-container {
+  position: relative;
+  margin-left: 20px; /* Espace par rapport aux options */
+}
+
+.user-icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px; /* Ajoute un peu de padding pour une meilleure zone de clic */
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+}
+
+.user-icon-button:hover {
+  background-color: #e0e0e0; /* Petit effet de survol */
+}
+
+.user-icon-button img {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+
+.user-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px); /* Plus d'espace entre l'icône et le menu */
+  background: white;
+  border: 1px solid #e0e0e0; /* Bordure plus douce */
+  border-radius: 8px; /* Coins plus arrondis */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Ombre plus prononcée */
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Pour que le border-radius soit appliqué aux boutons */
+  min-width: 160px; /* Minimum width for readability */
+}
+
+.user-dropdown button {
+  padding: 10px 15px; /* Plus de padding */
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  color: #333; /* Texte gris foncé */
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease;
+  width: 100%; /* Ensures button takes full width of dropdown */
+  outline: none; /* Removes default browser outline on focus */
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.05); /* Subtle text shadow for better readability */
+}
+
+.user-dropdown button:hover {
+  background-color: #f0f0f0; /* Gris très clair au survol */
+}
+
+.user-dropdown button + button {
+  border-top: 1px solid #f5f5f5; /* Very light gray separator between buttons */
+}
+
+
+.messages {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 20px; /* Plus de padding */
+  background-color: #fcfcfc; /* Fond très clair pour les messages */
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Plus d'espace entre les messages */
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #ccc transparent;
+  color: #333; /* Texte messages en gris foncé */
+}
+
+.message-user {
+  align-self: flex-end;
+  background-color: #e6e6e6; /* Gris clair */
+  color: #222; /* Texte très foncé */
+  padding: 12px 18px; /* Plus de padding */
+  border-radius: 20px 20px 0 20px;
+  max-width: 70%; /* Légèrement plus étroit */
+  word-break: break-word;
+  font-size: 1rem;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.12); /* Ombre plus douce */
+}
+
+.message-bot {
+  align-self: flex-start;
+  background-color: #ffffff; /* Blanc */
+  color: #222; /* Texte très foncé */
+  padding: 12px 18px; /* Plus de padding */
+  border-radius: 20px 20px 20px 0;
+  max-width: 70%; /* Légèrement plus étroit */
+  word-break: break-word;
+  font-size: 1rem;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.08); /* Ombre plus douce */
+  border: 1px solid #f0f0f0; /* Bordure subtile pour les messages du bot */
+}
+
+.input-area {
+  border-top: 1px solid #e0e0e0; /* Bordure grise */
+  padding: 15px 20px; /* Plus de padding */
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Plus d'espace entre les éléments */
+  background: #f7f7f7; /* Fond gris très clair */
+  flex-shrink: 0;
+  color: #333;
+}
+
+.input-area button {
+  font-size: 22px; /* Légèrement plus grand */
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: #666; /* Icône grise */
+  transition: color 0.2s ease;
+}
+
+.input-area button:hover:not(:disabled) {
+  color: #333; /* Deviens plus foncé au survol */
+}
+
+.input-area input[type="text"] {
+  flex-grow: 1;
+  padding: 10px 15px; /* Plus de padding */
+  font-size: 1rem;
+  border: 1px solid #ccc; /* Bordure grise */
+  border-radius: 25px; /* Plus arrondi */
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  color: #333;
+  background-color: white; /* Fond blanc */
+}
+
+.input-area input[type="text"]::placeholder {
+  color: #999; /* Placeholder plus doux */
+}
+
+.input-area input[type="text"]:focus {
+  border-color: #999; /* Bordure grise au focus */
+  box-shadow: 0 0 0 2px rgba(150,150,150,0.2); /* Ombre douce au focus */
+}
+
+.send-btn {
+  background-color: #555; /* Gris foncé distinctif */
+  border: none;
+  color: white;
+  padding: 10px 20px; /* Plus de padding */
+  font-size: 1rem;
+  border-radius: 25px; /* Plus arrondi */
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  font-weight: 600;
+}
+
+.send-btn:disabled {
+  background-color: #bbbbbb; /* Gris plus clair si désactivé */
+  cursor: not-allowed;
+  color: #eeeeee;
+}
+
+.send-btn:not(:disabled):hover {
+  background-color: #333; /* Gris très foncé au survol */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* Ombre au survol */
+}
+
+/* Responsive */
+@media (max-width: 768px) { /* Ajusté pour tablettes aussi */
+  .chat-container {
+    flex-direction: column; /* La liste de conversations passe au-dessus */
+    height: auto; /* Hauteur ajustée au contenu */
+  }
+
+  .conversations-list {
+    width: 100%;
+    height: auto; /* Permet à la liste de ne pas prendre toute la hauteur */
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 10px 0;
+  }
+
+  .conversations-list h3 {
+    display: none; /* Cache le titre sur mobile pour gagner de la place */
+  }
+
+  .new-conversation-btn {
+    width: calc(100% - 20px);
+    margin: 10px auto;
+  }
+
+  .conversation-item {
+    padding: 10px 10px;
+    font-size: 0.9rem;
+  }
+
+  .chat-main {
+    height: calc(100vh - 120px); /* Hauteur restante après la liste de conversations et l'input */
+  }
+
+  .chat-header {
+    flex-wrap: wrap; /* Permet aux éléments de passer à la ligne */
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .model-options {
+    margin-right: 0; /* Supprime l'alignement auto pour un meilleur wrap */
+    width: 100%;
+    justify-content: space-around;
+  }
+
+  .model-options select {
+    flex: 1;
+    margin: 0 5px; /* Espace entre les selects */
+  }
+
+  .user-menu-container {
+    margin-left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .user-dropdown {
+    top: auto; /* Positionnement au-dessus ou en dessous */
+    bottom: calc(100% + 10px); /* Tente de le positionner au-dessus */
+    left: 0; /* S'aligne à gauche de l'icône utilisateur */
+    right: auto;
+    width: 100%; /* S'étend sur toute la largeur */
+  }
+}
+
+/* Animation pour les points de "typing" */
+@keyframes dot-animation {
+  0%, 20% {
+    opacity: 0;
+  }
+  40% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.typing-animation span {
+  animation: dot-animation 1.5s infinite;
+  opacity: 0; /* Assurez-vous que les points sont invisibles au début */
+}
+
+.typing-animation span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-animation span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+
+.conversation-item {
+  /* Existing styles */
+  display: flex; /* Make it a flex container */
+  align-items: center; /* Vertically align items */
+  justify-content: space-between; /* Space out title and options button */
+  position: relative; /* For dropdown positioning */
+  padding-right: 5px; /* Adjust padding to make space for button */
+}
+
+.conversation-item .conversation-title {
+  flex-grow: 1; /* Allow title to take available space */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 5px; /* Small space before button */
+}
+
+.conversation-options-container {
+  position: relative;
+  /* Make sure it doesn't take too much space when not hovered */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease;
+  height: 24px; /* Fixed height for button */
+  width: 24px; /* Fixed width for button */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%; /* Make it round */
+  background-color: transparent;
+}
+
+.conversation-item:hover .conversation-options-container,
+.conversation-options-container:has(.conversation-options-dropdown) {
+  opacity: 1;
+  visibility: visible;
+  /* Add a subtle background on hover for the container */
+  background-color: #e0e0e0;
+}
+
+.conversation-options-button {
+  background: none;
+  border: none;
+  font-size: 1.2rem; /* Larger dots */
+  cursor: pointer;
+  padding: 0;
+  line-height: 1; /* Ensure dots are centered */
+  color: #666; /* Grey color for dots */
+  transition: color 0.2s ease, background-color 0.2s ease;
+  height: 100%;
+  width: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  outline: none; /* Remove focus outline */
+}
+
+.conversation-options-button:hover {
+  color: #333; /* Darker dots on hover */
+  background-color: #d0d0d0; /* Darker background for button itself */
+}
+
+.conversation-options-dropdown {
+  position: absolute;
+  top: 100%; /* Position below the button */
+  right: 0;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  z-index: 1010; /* Higher than user-dropdown */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 120px; /* Adjust as needed */
+}
+
+.conversation-options-dropdown button {
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  color: #333;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+  width: 100%;
+  outline: none;
+  text-shadow: none; /* No shadow for these smaller buttons */
+}
+
+.conversation-options-dropdown button:hover {
+  background-color: #f0f0f0;
+}
+
+.conversation-options-dropdown button + button {
+  border-top: 1px solid #f5f5f5; /* Separator for options */
+}
+
+/* Responsive adjustments for the new elements */
+@media (max-width: 480px) {
+  .conversation-item .conversation-title {
+    max-width: calc(100% - 40px); /* Adjust max-width to accommodate button */
+  }
+  .conversation-options-container {
+    opacity: 1; /* Always visible on small screens to make interaction easier */
+    visibility: visible;
+  }
+  .conversation-options-dropdown {
+    min-width: 100px; /* Smaller dropdown on very small screens */
+    font-size: 0.8rem;
+  }
+}
+
+
+
+.conversation-options-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 10px); /* Plus d'espace entre l'icône et le menu */
+  background: white;
+  border: 1px solid #e0e0e0; /* Bordure plus douce */
+  border-radius: 8px; /* Coins plus arrondis */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1); /* Ombre plus prononcée */
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Pour que le border-radius soit appliqué aux boutons */
+  min-width: 160px; /* Minimum width for readability */
+}
+
+.conversation-options-dropdown button {
+  padding: 10px 15px; /* Plus de padding */
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  color: #333; /* Texte gris foncé */
+  font-size: 0.95rem;
+  transition: background-color 0.2s ease;
+  width: 100%; /* Ensures button takes full width of dropdown */
+  outline: none; /* Removes default browser outline on focus */
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.05); /* Subtle text shadow for better readability */
+}
+
+.conversation-options-dropdown button:hover {
+  background-color: #f0f0f0; /* Gris très clair au survol */
+}
+
+.conversation-options-dropdown button + button {
+  border-top: 1px solid #f5f5f5; /* Very light gray separator between buttons */
+}
+
+.conversation-options-dropdown {
+    top: auto; /* Positionnement au-dessus ou en dessous */
+    bottom: calc(100% + 10px); /* Tente de le positionner au-dessus */
+    left: 0; /* S'aligne à gauche de l'icône utilisateur */
+    right: auto;
+    width: 100%; /* S'étend sur toute la largeur */
+}
