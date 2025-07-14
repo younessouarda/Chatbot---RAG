@@ -10,10 +10,15 @@ Elle comprend un **frontend React** (React + Vite) et un **backend Python** (Fla
 ## Structure du projet
 
 ChatRAG/
+
 ├── backend/ # Backend Python (API)
+
 ├── frontend/ # Frontend React
+
 ├── requirements.txt # Dépendances Python
+
 ├── README.md # Ce fichier
+
 └── .gitignore # Fichiers/dossiers exclus du repo
 
 
