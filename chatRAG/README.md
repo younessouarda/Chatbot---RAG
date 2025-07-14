@@ -31,18 +31,24 @@ ChatRAG/
 
 1. **Créer un environnement virtuel :**
     Apres que vous avez ovrit le projet chatrag dans votre IDE
-    Dans votre teminal exécuter cette commande: python -m venv venv
+    Dans votre teminal exécuter cette commande:
 
-2. **Activer l’environnement :**
-    Linux/macOS : source venv/bin/activate
-    Windows : .\venv\Scripts\activate
+    python -m venv venv
 
-3. **Installer les dépendances :**
+3. **Activer l’environnement :**
+
+    Linux/macOS :
+    source venv/bin/activate
+
+   Windows :
+   .\venv\Scripts\activate
+
+5. **Installer les dépendances :**
     Exécuter cette commande qui va utilise le fichier requirements.txt pour installer les dépendances Python:
 
     pip install -r requirements.txt
 
-4. **Démarrer le serveur backend :**
+6. **Démarrer le serveur backend :**
     
     Pour demarrer le backend tu peut executer le fichier application.py situe dans le chemin suivant " backend\app\rag_multiagents\agents\application.py"
 
@@ -51,15 +57,18 @@ ChatRAG/
 
 1. **Aller dans le dossier frontend :**
 
-    Dans votre terminal executer cette commande: cd frontend
+    Dans votre terminal executer cette commande:
+    cd frontend
 
-2. **Installer les dépendances** :
+3. **Installer les dépendances** :
 
     npm install
 
-3. **Lancer l'application frontend :**
+4. **Lancer l'application frontend :**
 
-    Executer cette commande : npm run dev
+    Executer cette commande :
+
+   npm run dev
 
     L'application sera disponible par défaut sur : http://localhost:5173
 
@@ -73,5 +82,5 @@ ChatRAG/
 
 
 ## Auteur
-    Développé par [Youness OUARDA au sein de 3D Smart Factory, Mohammédia, Maroc].
+    Développé par [Youness OUARDA au sein de la société 3D Smart Factory, Mohammédia, Maroc].
 
