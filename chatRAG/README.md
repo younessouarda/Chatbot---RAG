@@ -75,12 +75,12 @@ ChatRAG/
 
 ### Prérequis :
 
-    Python 3.9+
+Python 3.9+
 
-    Node.js 18+ et npm
+Node.js 18+ et npm
 
 
 
 ## Auteur
-    Développé par [Youness OUARDA au sein de la société 3D Smart Factory, Mohammédia, Maroc].
+Développé par [Youness OUARDA au sein de la société 3D Smart Factory, Mohammédia, Maroc].
 
